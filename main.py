@@ -52,7 +52,7 @@ def get_words():
     return words.json()['data']['text']
 
 def get_proverb():
-    with open(r"E:\PyCharm Community Edition 2019.3.1\pyexample\ex1\python_exicise\tuisong/proverb.txt", encoding="UTF-8") as f:
+    with open(r"./proverb.txt", encoding="UTF-8") as f:
         content = f.read().splitlines()
         rand_int = random.randint(0, 319)*3
     return content[rand_int], content[rand_int+1]
