@@ -43,12 +43,18 @@ def get_words():
 def get_random_color():
   return "#%06x" % random.randint(0, 0xFFFFFF)
 
+def get_nowdate():
+  week_list = ["星期一","星期二","星期三","星期四","星期五","星期六","星期日"]
+  time_tuple = datetime.now().timetuple()
+  return str(time_tuple[0])+'年'+str(time_tuple[1])+'月'+str(time_tuple[2])+'日', week_list[time_tuple[6]]
 
 client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
 wea, temperature, low, high, wind = get_weather()
-data = {"weather":{"value":wea,"color":get_random_color()}, "wind":{"value":wind,"color":get_random_color()}, "temperature":{"value":temperature,"color":get_random_color()},\
+now_date, now_weekday = get_nowdate()
+data = {"date":{"value":now_date,"color":get_random_color()}, "weekday":{"value":now_weekday,"color":get_random_color()}, \
+        "weather":{"value":wea,"color":get_random_color()}, "wind":{"value":wind,"color":get_random_color()}, "temperature":{"value":temperature,"color":get_random_color()},\
         "low":{"value":low,"color":get_random_color()},"high":{"value":high,"color":get_random_color()}, "love_days":{"value":get_count(),"color":get_random_color()},\
         "birthday_left":{"value":get_birthday(),"color":get_random_color()},"words":{"value":get_words(), "color":get_random_color()}}
 res = wm.send_template(user_id, template_id, data)
