@@ -1,3 +1,7 @@
+# -*- coding: UTF-8 -*-
+# Author@HuKe
+# Time@2022/8/13 22:15
+
 from datetime import date, datetime
 import math
 from wechatpy import WeChatClient
@@ -5,15 +9,16 @@ from wechatpy.client.api import WeChatMessage, WeChatTemplate
 import requests
 import os
 import random
+from get_luck import get_luck
 
-os.environ = {'START_DATE': '2022-08-01', 
-              'CITY': '清远', 
-              'BIRTHDAY': '12-16',
+os.environ = {'START_DATE': '2022-08-20', 'CITY': '清远', 'BIRTHDAY': '12-16',
               'APP_ID': 'wx720fa7cc3a736f19',
               'APP_SECRET': 'd7cbd803af03d7175d541ae607a1915f',
               'USER_ID': 'obngy6QJerMZ2HUiJmHWSF59cPNM',
               'USER_ID2': 'obngy6Wqtl9El6R-PefCwogTVVzc',
-              'TEMPLATE_ID': 'hB24-tFtybmhtmPuKSdo2yi7qlCS-sU7YnA9NRXtmlM'}
+              'TEMPLATE_ID1': 'hB24-tFtybmhtmPuKSdo2yi7qlCS-sU7YnA9NRXtmlM',
+              'TEMPLATE_ID2': '4cvmxDHz29bDHuOjwQS8kxpAcq_4It65cSe9JkMGD58',
+              'TEMPLATE_ID3': 'bTeaGW6PdepvKZ06wwSC_dLZ-1LOpzCDmdsT88gcIwA'}
 
 # 未明世事 'USER_ID':'obngy6QJerMZ2HUiJmHWSF59cPNM'
 # 懒喵桑   'USER_ID2':obngy6Wqtl9El6R-PefCwogTVVzc'
@@ -26,7 +31,9 @@ app_id = os.environ["APP_ID"]
 app_secret = os.environ["APP_SECRET"]
 user_id = os.environ["USER_ID"]
 user_id2 = os.environ["USER_ID2"]
-template_id = os.environ["TEMPLATE_ID"]
+template_id1 = os.environ["TEMPLATE_ID1"]
+template_id2 = os.environ["TEMPLATE_ID2"]
+template_id3 = os.environ["TEMPLATE_ID3"]
 
 def get_weather():
     url = "http://autodev.openspeech.cn/csp/api/v2.1/weather?openId=aiuicus&clientType=android&sign=android&city=" + city
@@ -37,7 +44,7 @@ def get_weather():
 
 def get_count():
     delta = today - datetime.strptime(start_date, "%Y-%m-%d")
-    return delta.days
+    return delta.days + 1
 
 def get_birthday():
     next = datetime.strptime(str(date.today().year) + "-" + birthday, "%Y-%m-%d")
@@ -52,7 +59,7 @@ def get_words():
     return words.json()['data']['text']
 
 def get_proverb():
-    with open(r"./proverb.txt", encoding="UTF-8") as f:
+    with open("proverb.txt", encoding="UTF-8") as f:
         content = f.read().splitlines()
         rand_int = random.randint(0, 319)*3
     return content[rand_int], content[rand_int+1]
@@ -72,6 +79,7 @@ if __name__ == '__main__':
     wea, wind, temp, low, high = get_weather()
     now_date, now_weekday = get_date()
     proverb_En, proverb_Ch = get_proverb()
+    luck_title, luck_content = get_luck()
 
     data = {"date": {"value": now_date, "color": get_random_color()},
             "weekday": {"value": now_weekday, "color": get_random_color()},
@@ -84,7 +92,20 @@ if __name__ == '__main__':
             "birthday_left": {"value": get_birthday(), "color": get_random_color()},
             "words": {"value": get_words(), "color": get_random_color()},
             "proverb_En": {"value": proverb_En, "color": get_random_color()},
-            "proverb_Ch": {"value": proverb_Ch, "color": get_random_color()}}
-
-    wm.send_template(user_id, template_id, data)
-    wm.send_template(user_id2, template_id, data)
+            "proverb_Ch": {"value": proverb_Ch, "color": get_random_color()},
+            "luck_title_0": {"value": luck_title[0], "color": get_random_color()},
+            "luck_title_1": {"value": luck_title[1], "color": get_random_color()},
+            "luck_title_2": {"value": luck_title[2], "color": get_random_color()},
+            "luck_title_3": {"value": luck_title[3], "color": get_random_color()},
+            "luck_title_4": {"value": luck_title[4], "color": get_random_color()},
+            "luck_content_0": {"value": luck_content[0]},
+            "luck_content_1": {"value": luck_content[1]},
+            "luck_content_2": {"value": luck_content[2]},
+            "luck_content_3": {"value": luck_content[3]},
+            "luck_content_4": {"value": luck_content[4]}}
+    wm.send_template(user_id, template_id1, data)
+    wm.send_template(user_id, template_id2, data)
+    wm.send_template(user_id, template_id3, data)
+    wm.send_template(user_id2, template_id1, data)
+    wm.send_template(user_id2, template_id2, data)
+    wm.send_template(user_id2, template_id3, data)
