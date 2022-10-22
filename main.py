@@ -11,7 +11,7 @@ import os
 import random
 from get_luck import get_luck
 
-os.environ = {'START_DATE': '2022-08-20', 'CITY': '清远', 'BIRTHDAY': '12-16',
+os.environ = {'START_DATE': '2022-08-20', 'CITY': '梅州', 'BIRTHDAY': '12-16',
               'APP_ID': 'wx720fa7cc3a736f19',
               'APP_SECRET': 'd7cbd803af03d7175d541ae607a1915f',
               'USER_ID': 'obngy6QJerMZ2HUiJmHWSF59cPNM',
